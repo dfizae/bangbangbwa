@@ -4,8 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
-  방방봐 디자인 토큰 — 블루 계열 신뢰(trust) 톤.
-  primary = blue-600, 배경/보더는 slate 블루 틴트, ring/accent 블루 강조.
+  방방봐 디자인 토큰 — 사용자가 만든 메인 시안의 에메랄드 브랜드 톤.
 */
 :root {
   --radius: 0.625rem;
@@ -19,7 +18,7 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.208 0.042 265.8);
 
-  --primary: oklch(0.546 0.245 262.9);
+  --primary: oklch(0.596 0.16 157.1);
   --primary-foreground: oklch(0.984 0.003 247.9);
 
   --secondary: oklch(0.968 0.007 247.9);
@@ -28,15 +27,15 @@
   --muted: oklch(0.968 0.007 247.9);
   --muted-foreground: oklch(0.554 0.046 257.4);
 
-  --accent: oklch(0.95 0.02 255);
-  --accent-foreground: oklch(0.488 0.243 264.4);
+  --accent: oklch(0.962 0.044 156.7);
+  --accent-foreground: oklch(0.43 0.12 157.1);
 
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.9);
 
   --border: oklch(0.929 0.013 255.5);
   --input: oklch(0.929 0.013 255.5);
-  --ring: oklch(0.546 0.245 262.9);
+  --ring: oklch(0.596 0.16 157.1);
 
   --chart-1: oklch(0.546 0.245 262.9);
   --chart-2: oklch(0.623 0.214 259.8);
@@ -64,7 +63,7 @@
   --popover: oklch(0.279 0.041 260);
   --popover-foreground: oklch(0.984 0.003 247.9);
 
-  --primary: oklch(0.623 0.214 259.8);
+  --primary: oklch(0.696 0.17 157.1);
   --primary-foreground: oklch(0.984 0.003 247.9);
 
   --secondary: oklch(0.279 0.041 260);
@@ -73,15 +72,15 @@
   --muted: oklch(0.279 0.041 260);
   --muted-foreground: oklch(0.704 0.04 256.8);
 
-  --accent: oklch(0.34 0.05 262);
-  --accent-foreground: oklch(0.882 0.059 254.1);
+  --accent: oklch(0.32 0.055 157.1);
+  --accent-foreground: oklch(0.9 0.08 157.1);
 
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.984 0.003 247.9);
 
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.623 0.214 259.8);
+  --ring: oklch(0.696 0.17 157.1);
 
   --chart-1: oklch(0.623 0.214 259.8);
   --chart-2: oklch(0.707 0.165 254.6);
@@ -150,5 +149,7 @@
     @apply bg-background text-foreground;
     /* 한글 단어 중간 줄바꿈 방지 */
     word-break: keep-all;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 }

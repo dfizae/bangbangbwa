@@ -1,20 +1,37 @@
-import { Heart } from "lucide-react"
+import { Heart } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardAction,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { formatPrice, toPyeong } from "@/lib/format"
+} from "@/components/ui/card";
+import { formatPrice, toPyeong } from "@/lib/format";
+import type { Property } from "@/types";
+
+interface PropertyCardProps {
+  property: Property;
+  onToggleSave: (id: number) => void;
+  onOpen: (id: number) => void;
+}
 
 // PROP-02 목록 카드. 저장 토글(PROP-04·05)은 onToggleSave로, 상세 이동(PROP-03)은 onOpen으로 위임.
-function PropertyCard({ property, onToggleSave, onOpen }) {
-  const { title, dealType, buildingType, region, dong, areaM2, floor, totalFloors, rooms, saved } =
-    property
+function PropertyCard({ property, onToggleSave, onOpen }: PropertyCardProps) {
+  const {
+    title,
+    dealType,
+    buildingType,
+    region,
+    dong,
+    areaM2,
+    floor,
+    totalFloors,
+    rooms,
+    saved,
+  } = property;
 
   return (
     <Card
@@ -24,7 +41,9 @@ function PropertyCard({ property, onToggleSave, onOpen }) {
       aria-label={`${title} 상세 보기`}
       onClick={() => onOpen(property.id)}
       onKeyDown={(e) => {
-        if (e.key === "Enter") onOpen(property.id)
+        if (e.key === "Enter") {
+          onOpen(property.id);
+        }
       }}
     >
       <CardHeader className="px-5">
@@ -40,8 +59,8 @@ function PropertyCard({ property, onToggleSave, onOpen }) {
             aria-label={saved ? "매물 저장 취소" : "매물 저장"}
             aria-pressed={saved}
             onClick={(e) => {
-              e.stopPropagation()
-              onToggleSave(property.id)
+              e.stopPropagation();
+              onToggleSave(property.id);
             }}
           >
             <Heart
@@ -67,7 +86,7 @@ function PropertyCard({ property, onToggleSave, onOpen }) {
         </p>
       </CardContent>
     </Card>
-  )
+  );
 }
 
-export default PropertyCard
+export default PropertyCard;

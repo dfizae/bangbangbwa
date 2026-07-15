@@ -100,8 +100,8 @@
 }
 
 @theme inline {
-  --font-sans: "IBM Plex Sans KR", -apple-system, BlinkMacSystemFont,
-    system-ui, sans-serif;
+  --font-sans:
+    "IBM Plex Sans KR", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

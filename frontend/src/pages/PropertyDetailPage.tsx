@@ -1,69 +1,76 @@
-import { useState } from "react"
-import { CalendarPlus, ChevronLeft, Heart, Pencil, Trash2 } from "lucide-react"
+import { useState, type ComponentProps, type ReactNode } from "react";
+import { CalendarPlus, ChevronLeft, Heart, Pencil, Trash2 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { formatPrice, toPyeong } from "@/lib/format"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { formatPrice, toPyeong } from "@/lib/format";
+import type { Memo, Property } from "@/types";
 
 // shadcn Textarea 미설치 → Input과 동일 토큰으로 스타일링한 로컬 textarea
-function MemoTextarea(props) {
+function MemoTextarea(props: ComponentProps<"textarea">) {
   return (
     <textarea
       className="min-h-20 w-full resize-y rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
       {...props}
     />
-  )
+  );
 }
 
-function InfoRow({ label, children }) {
+function InfoRow({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="flex justify-between gap-4 py-2.5 text-sm">
       <dt className="shrink-0 text-muted-foreground">{label}</dt>
       <dd className="text-right font-medium">{children}</dd>
     </div>
-  )
+  );
 }
 
-function formatMemoDate(iso) {
+function formatMemoDate(iso: string) {
   return new Date(iso).toLocaleDateString("ko-KR", {
     month: "long",
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
-  })
+  });
+}
+
+interface MemoSectionProps {
+  memos: Memo[];
+  onAdd: (text: string) => void;
+  onUpdate: (memoId: number, text: string) => void;
+  onDelete: (memoId: number) => void;
 }
 
 // MEMO-01~04: 메모 작성·조회·수정·삭제
-function MemoSection({ memos, onAdd, onUpdate, onDelete }) {
-  const [draft, setDraft] = useState("")
-  const [editingId, setEditingId] = useState(null)
-  const [editText, setEditText] = useState("")
+function MemoSection({ memos, onAdd, onUpdate, onDelete }: MemoSectionProps) {
+  const [draft, setDraft] = useState("");
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editText, setEditText] = useState("");
 
   const submitDraft = () => {
-    const text = draft.trim()
-    if (!text) return
-    onAdd(text)
-    setDraft("")
-  }
+    const text = draft.trim();
+    if (!text) {
+      return;
+    }
+    onAdd(text);
+    setDraft("");
+  };
 
-  const startEdit = (memo) => {
-    setEditingId(memo.id)
-    setEditText(memo.text)
-  }
+  const startEdit = (memo: Memo) => {
+    setEditingId(memo.id);
+    setEditText(memo.text);
+  };
 
   const submitEdit = () => {
-    const text = editText.trim()
-    if (!text) return
-    onUpdate(editingId, text)
-    setEditingId(null)
-  }
+    const text = editText.trim();
+    if (!text || editingId === null) {
+      return;
+    }
+    onUpdate(editingId, text);
+    setEditingId(null);
+  };
 
   return (
     <Card className="gap-4">
@@ -87,10 +94,18 @@ function MemoSection({ memos, onAdd, onUpdate, onDelete }) {
                       aria-label="메모 수정"
                     />
                     <div className="flex justify-end gap-2">
-                      <Button variant="ghost" size="sm" onClick={() => setEditingId(null)}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setEditingId(null)}
+                      >
                         취소
                       </Button>
-                      <Button size="sm" onClick={submitEdit} disabled={!editText.trim()}>
+                      <Button
+                        size="sm"
+                        onClick={submitEdit}
+                        disabled={!editText.trim()}
+                      >
                         저장
                       </Button>
                     </div>
@@ -137,13 +152,18 @@ function MemoSection({ memos, onAdd, onUpdate, onDelete }) {
             onChange={(e) => setDraft(e.target.value)}
             aria-label="메모 작성"
           />
-          <Button className="self-end" size="sm" onClick={submitDraft} disabled={!draft.trim()}>
+          <Button
+            className="self-end"
+            size="sm"
+            onClick={submitDraft}
+            disabled={!draft.trim()}
+          >
             메모 작성
           </Button>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 function DetailSkeleton() {
@@ -162,7 +182,18 @@ function DetailSkeleton() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
+}
+
+interface PropertyDetailPageProps {
+  property: Property | null;
+  loading: boolean;
+  onBack: () => void;
+  onToggleSave: (id: number) => void;
+  memos: Memo[];
+  onAddMemo: (text: string) => void;
+  onUpdateMemo: (memoId: number, text: string) => void;
+  onDeleteMemo: (memoId: number) => void;
 }
 
 // PAGE-05 매물 상세 — 매물 정보(PROP-03), 저장(PROP-04·05), 예약, 메모(MEMO-01~04)
@@ -175,17 +206,24 @@ function PropertyDetailPage({
   onAddMemo,
   onUpdateMemo,
   onDeleteMemo,
-}) {
+}: PropertyDetailPageProps) {
   const priceLabel = property
-    ? { 매매: "매매가", 전세: "전세 보증금", 월세: "보증금 / 월세" }[property.dealType]
-    : ""
+    ? { 매매: "매매가", 전세: "전세 보증금", 월세: "보증금 / 월세" }[
+        property.dealType
+      ]
+    : "";
 
   return (
     <div className="min-h-svh bg-background">
       {/* top-14: 공통 GNB(h-14) 아래에 고정 */}
       <header className="sticky top-14 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
         <div className="mx-auto flex max-w-3xl items-center gap-2 px-4 py-3">
-          <Button variant="ghost" size="icon" aria-label="목록으로" onClick={onBack}>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="목록으로"
+            onClick={onBack}
+          >
             <ChevronLeft />
           </Button>
           <h1 className="text-lg font-semibold">매물 상세</h1>
@@ -220,7 +258,9 @@ function PropertyDetailPage({
                   </span>
                 </p>
                 <dl className="mt-4 divide-y">
-                  <InfoRow label={priceLabel}>{formatPrice(property)} 만원</InfoRow>
+                  <InfoRow label={priceLabel}>
+                    {formatPrice(property)} 만원
+                  </InfoRow>
                   <InfoRow label="위치">
                     {property.region} {property.dong}
                   </InfoRow>
@@ -270,7 +310,7 @@ function PropertyDetailPage({
         )}
       </main>
     </div>
-  )
+  );
 }
 
-export default PropertyDetailPage
+export default PropertyDetailPage;

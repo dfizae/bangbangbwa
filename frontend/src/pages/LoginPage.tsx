@@ -1,8 +1,9 @@
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { useAuth } from "@/context/AuthContext"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { useAuth } from "@/context/AuthContext";
+import type { AuthProvider } from "@/types";
 
 // 카카오 공식 심볼(말풍선) — 브랜드 가이드: 심볼·텍스트 검정(#000000 85%), 배경 #FEE500
 function KakaoSymbol() {
@@ -10,7 +11,7 @@ function KakaoSymbol() {
     <svg viewBox="0 0 24 24" aria-hidden className="size-4.5 fill-[#000000]">
       <path d="M12 3C6.48 3 2 6.54 2 10.9c0 2.82 1.88 5.3 4.7 6.7l-.98 3.62c-.09.32.28.58.56.4l4.32-2.86c.46.05.93.08 1.4.08 5.52 0 10-3.53 10-7.94S17.52 3 12 3z" />
     </svg>
-  )
+  );
 }
 
 // 구글 공식 G 로고 (4색)
@@ -34,22 +35,22 @@ function GoogleLogo() {
         d="M12 4.77c1.76 0 3.34.61 4.58 1.8l3.44-3.44A11.97 11.97 0 0 0 12 0 12 12 0 0 0 1.27 6.61l4.01 3.11C6.22 6.88 8.87 4.77 12 4.77z"
       />
     </svg>
-  )
+  );
 }
 
 // PAGE-01 로그인 — 카카오·구글 소셜 로그인 (AUTH-01). OAuth 실연동 전 스텁 동작.
 function LoginPage() {
-  const { login } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // GNB 로그인 버튼이 넘겨준 이전 경로. 없으면 "/"
-  const from = location.state?.from ?? "/"
+  const from = location.state?.from ?? "/";
 
-  const mockLogin = async (provider) => {
-    await login(provider)
-    navigate(from, { replace: true })
-  }
+  const mockLogin = async (provider: AuthProvider) => {
+    await login(provider);
+    navigate(from, { replace: true });
+  };
 
   return (
     <main className="grid min-h-[calc(100svh-3.5rem)] place-items-center bg-muted/40 px-4">
@@ -91,7 +92,7 @@ function LoginPage() {
         </CardContent>
       </Card>
     </main>
-  )
+  );
 }
 
-export default LoginPage
+export default LoginPage;

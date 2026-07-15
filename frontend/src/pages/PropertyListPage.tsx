@@ -1,14 +1,17 @@
-import { useMemo, useState } from "react"
-import { SearchX } from "lucide-react"
+import { useMemo, useState } from "react";
+import { SearchX } from "lucide-react";
 
-import PropertyCard from "@/components/PropertyCard"
-import PropertyFilterBar, { DEFAULT_FILTERS } from "@/components/PropertyFilterBar"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { PRICE_BANDS } from "@/data/properties"
+import PropertyCard from "@/components/PropertyCard";
+import PropertyFilterBar, {
+  DEFAULT_FILTERS,
+} from "@/components/PropertyFilterBar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { PRICE_BANDS } from "@/data/properties";
+import type { Property } from "@/types";
 
-const SKELETON_COUNT = 6
+const SKELETON_COUNT = 6;
 
 function PropertyCardSkeleton() {
   return (
@@ -26,26 +29,50 @@ function PropertyCardSkeleton() {
         <Skeleton className="mt-2 h-4 w-40" />
       </CardContent>
     </Card>
-  )
+  );
+}
+
+interface PropertyListPageProps {
+  loading: boolean;
+  properties: Property[];
+  onToggleSave: (id: number) => void;
+  onOpen: (id: number) => void;
 }
 
 // PAGE-04 매물 목록 — 목록 조회(PROP-02) 및 필터. 매물 상태는 App이 소유.
-function PropertyListPage({ loading, properties, onToggleSave, onOpen }) {
-  const [filters, setFilters] = useState(DEFAULT_FILTERS)
+function PropertyListPage({
+  loading,
+  properties,
+  onToggleSave,
+  onOpen,
+}: PropertyListPageProps) {
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
 
   const filtered = useMemo(() => {
-    const query = filters.query.trim()
-    const band = PRICE_BANDS.find((b) => b.value === filters.price)
+    const query = filters.query.trim();
+    const band = PRICE_BANDS.find((b) => b.value === filters.price);
     return properties.filter((p) => {
-      if (query && ![p.title, p.region, p.dong].some((v) => v.includes(query)))
-        return false
-      if (filters.region !== "all" && p.region !== filters.region) return false
-      if (filters.buildingType !== "all" && p.buildingType !== filters.buildingType)
-        return false
-      if (band && (p.deposit < band.min || p.deposit >= band.max)) return false
-      return true
-    })
-  }, [properties, filters])
+      if (
+        query &&
+        ![p.title, p.region, p.dong].some((v) => v.includes(query))
+      ) {
+        return false;
+      }
+      if (filters.region !== "all" && p.region !== filters.region) {
+        return false;
+      }
+      if (
+        filters.buildingType !== "all" &&
+        p.buildingType !== filters.buildingType
+      ) {
+        return false;
+      }
+      if (band && (p.deposit < band.min || p.deposit >= band.max)) {
+        return false;
+      }
+      return true;
+    });
+  }, [properties, filters]);
 
   return (
     <div className="min-h-svh bg-background">
@@ -79,7 +106,11 @@ function PropertyListPage({ loading, properties, onToggleSave, onOpen }) {
             <p className="text-sm text-muted-foreground">
               필터를 조정하거나 초기화해 보세요.
             </p>
-            <Button variant="outline" size="sm" onClick={() => setFilters(DEFAULT_FILTERS)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setFilters(DEFAULT_FILTERS)}
+            >
               필터 초기화
             </Button>
           </div>
@@ -106,7 +137,7 @@ function PropertyListPage({ loading, properties, onToggleSave, onOpen }) {
         )}
       </main>
     </div>
-  )
+  );
 }
 
-export default PropertyListPage
+export default PropertyListPage;

@@ -1,23 +1,44 @@
-import { useEffect, useState } from "react"
-import { Route, Routes, useNavigate, useParams } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 
-import GlobalNav from "@/components/GlobalNav"
-import { AuthProvider } from "@/context/AuthContext"
-import { ThemeProvider } from "@/context/ThemeContext"
-import LandingPage from "@/pages/LandingPage"
-import LoginPage from "@/pages/LoginPage"
-import PropertyDetailPage from "@/pages/PropertyDetailPage"
-import PropertyListPage from "@/pages/PropertyListPage"
-import { PROPERTIES } from "@/data/properties"
+import GlobalNav from "@/components/GlobalNav";
+import { AuthProvider } from "@/context/AuthContext";
+import { ThemeProvider } from "@/context/ThemeContext";
+import LandingPage from "@/pages/LandingPage";
+import LoginPage from "@/pages/LoginPage";
+import PropertyDetailPage from "@/pages/PropertyDetailPage";
+import PropertyListPage from "@/pages/PropertyListPage";
+import { PROPERTIES } from "@/data/properties";
+import type { Memo, Property } from "@/types";
 
 // API 연동 전 목데이터 로딩 시뮬레이션 시간(ms)
-const MOCK_LOADING_MS = 600
+const MOCK_LOADING_MS = 600;
 
-function DetailRoute({ loading, properties, memos, onToggleSave, memoActions }) {
-  const { id: idParam } = useParams()
-  const navigate = useNavigate()
-  const id = Number(idParam)
-  const property = properties.find((p) => p.id === id) ?? null
+interface MemoActions {
+  add: (propertyId: number, text: string) => void;
+  update: (propertyId: number, memoId: number, text: string) => void;
+  remove: (propertyId: number, memoId: number) => void;
+}
+
+interface DetailRouteProps {
+  loading: boolean;
+  properties: Property[];
+  memos: Record<number, Memo[]>;
+  onToggleSave: (id: number) => void;
+  memoActions: MemoActions;
+}
+
+function DetailRoute({
+  loading,
+  properties,
+  memos,
+  onToggleSave,
+  memoActions,
+}: DetailRouteProps) {
+  const { id: idParam } = useParams();
+  const navigate = useNavigate();
+  const id = Number(idParam);
+  const property = properties.find((p) => p.id === id) ?? null;
 
   return (
     <PropertyDetailPage
@@ -30,31 +51,31 @@ function DetailRoute({ loading, properties, memos, onToggleSave, memoActions }) 
       onUpdateMemo={(memoId, text) => memoActions.update(id, memoId, text)}
       onDeleteMemo={(memoId) => memoActions.remove(id, memoId)}
     />
-  )
+  );
 }
 
 function App() {
-  const [loading, setLoading] = useState(true)
-  const [properties, setProperties] = useState([])
-  const [memos, setMemos] = useState({}) // { [propertyId]: [{ id, text, createdAt }] }
-  const navigate = useNavigate()
+  const [loading, setLoading] = useState(true);
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [memos, setMemos] = useState<Record<number, Memo[]>>({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setProperties(PROPERTIES)
-      setLoading(false)
-    }, MOCK_LOADING_MS)
-    return () => clearTimeout(timer)
-  }, [])
+      setProperties(PROPERTIES);
+      setLoading(false);
+    }, MOCK_LOADING_MS);
+    return () => clearTimeout(timer);
+  }, []);
 
   // PROP-04·05 매물 저장·저장 취소
-  const toggleSave = (id) =>
+  const toggleSave = (id: number) =>
     setProperties((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, saved: !p.saved } : p))
-    )
+      prev.map((p) => (p.id === id ? { ...p, saved: !p.saved } : p)),
+    );
 
   // MEMO-01~03 메모 작성·수정·삭제
-  const memoActions = {
+  const memoActions: MemoActions = {
     add: (propertyId, text) =>
       setMemos((prev) => ({
         ...prev,
@@ -67,7 +88,7 @@ function App() {
       setMemos((prev) => ({
         ...prev,
         [propertyId]: prev[propertyId].map((m) =>
-          m.id === memoId ? { ...m, text } : m
+          m.id === memoId ? { ...m, text } : m,
         ),
       })),
     remove: (propertyId, memoId) =>
@@ -75,7 +96,7 @@ function App() {
         ...prev,
         [propertyId]: prev[propertyId].filter((m) => m.id !== memoId),
       })),
-  }
+  };
 
   return (
     <ThemeProvider>
@@ -110,7 +131,7 @@ function App() {
         </Routes>
       </AuthProvider>
     </ThemeProvider>
-  )
+  );
 }
 
-export default App
+export default App;

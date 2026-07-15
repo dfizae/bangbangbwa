@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useEffect, useRef, useState, type RefObject } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   CalendarCheck,
@@ -13,30 +13,51 @@ import {
   MapPin,
   Play,
   Video,
-} from "lucide-react"
+  type LucideIcon,
+} from "lucide-react";
 
-import PropertyCard from "@/components/PropertyCard"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { PROPERTIES } from "@/data/properties"
-import { cn } from "@/lib/utils"
+import PropertyCard from "@/components/PropertyCard";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { PROPERTIES } from "@/data/properties";
+import { cn } from "@/lib/utils";
 
-const PAIN_POINTS = [
+const PAIN_POINTS: Array<{ icon: LucideIcon; text: string }> = [
   { icon: MapPin, text: "매물 한 번 보러 왕복 4시간" },
   { icon: ImageOff, text: "사진과 다른 실물" },
   { icon: HelpCircle, text: "뭘 확인해야 할지 모르는 첫 계약" },
-]
+];
 
-const FLOW_STEPS = [
-  { icon: CalendarCheck, title: "예약", description: "원하는 매물의 화상 투어 일정을 잡아요" },
-  { icon: Video, title: "라이브 투어", description: "중개사와 실시간 영상으로 매물을 확인해요" },
-  { icon: ClipboardCheck, title: "체크리스트", description: "점검 항목을 하나씩 확인하며 기록해요" },
-  { icon: FileText, title: "리포트", description: "캡처와 요약이 담긴 리포트를 받아요" },
-]
+const FLOW_STEPS: Array<{
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}> = [
+  {
+    icon: CalendarCheck,
+    title: "예약",
+    description: "원하는 매물의 화상 투어 일정을 잡아요",
+  },
+  {
+    icon: Video,
+    title: "라이브 투어",
+    description: "중개사와 실시간 영상으로 매물을 확인해요",
+  },
+  {
+    icon: ClipboardCheck,
+    title: "체크리스트",
+    description: "점검 항목을 하나씩 확인하며 기록해요",
+  },
+  {
+    icon: FileText,
+    title: "리포트",
+    description: "캡처와 요약이 담긴 리포트를 받아요",
+  },
+];
 
 // 히어로 데모 카드에 쓰는 블루 틴티드 섀도우 (검정 대신 primary 색조)
-const TINTED_SHADOW = "shadow-[0_16px_40px_-8px_rgba(22,93,252,0.25)]"
+const TINTED_SHADOW = "shadow-[0_16px_40px_-8px_rgba(22,93,252,0.25)]";
 
 // 라이브 투어 영상 목업 — Bento 와이드 카드 우측
 function LiveMockup() {
@@ -55,7 +76,7 @@ function LiveMockup() {
         강남구 역삼동 · 시청 3명
       </span>
     </div>
-  )
+  );
 }
 
 // AI 검수 리포트 미리보기 목업 — 흐름 섹션 우측
@@ -64,11 +85,13 @@ function ReportMockup() {
     <div
       className={cn(
         "hidden rounded-xl border bg-card p-6 lg:block",
-        TINTED_SHADOW
+        TINTED_SHADOW,
       )}
     >
       <div className="flex items-center justify-between gap-2">
-        <span className="text-sm font-semibold">AI 검수 리포트 — 역삼 래미안</span>
+        <span className="text-sm font-semibold">
+          AI 검수 리포트 — 역삼 래미안
+        </span>
         <Badge variant="secondary">자동 생성</Badge>
       </div>
       <div className="mt-4 grid grid-cols-3 gap-2">
@@ -92,47 +115,57 @@ function ReportMockup() {
         하자 2건 · 확인 요청 5건 기록됨
       </p>
     </div>
-  )
+  );
 }
 
 // 히어로 쇼케이스 — 초기엔 PropertyCard 데모, 스크롤 30% 지점에서
 // 카드가 페이드아웃되고 같은 자리에서 투어 영상(0~6초)이 루프 재생됨
-function HeroShowcase({ scrollRootRef }) {
-  const navigate = useNavigate()
-  const videoRef = useRef(null)
-  const [demoProperty, setDemoProperty] = useState(PROPERTIES[0])
-  const [showVideo, setShowVideo] = useState(false)
+function HeroShowcase({
+  scrollRootRef,
+}: {
+  scrollRootRef: RefObject<HTMLElement | null>;
+}) {
+  const navigate = useNavigate();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [demoProperty, setDemoProperty] = useState(PROPERTIES[0]);
+  const [showVideo, setShowVideo] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
-      const root = scrollRootRef.current
-      if (!root) return
-      const rect = root.getBoundingClientRect()
-      const scrollable = rect.height - window.innerHeight
-      if (scrollable <= 0) return
-      const progress = Math.min(1, Math.max(0, -rect.top / scrollable))
-      setShowVideo(progress > 0.3)
-    }
-    window.addEventListener("scroll", onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [scrollRootRef])
+      const root = scrollRootRef.current;
+      if (!root) {
+        return;
+      }
+      const rect = root.getBoundingClientRect();
+      const scrollable = rect.height - window.innerHeight;
+      if (scrollable <= 0) {
+        return;
+      }
+      const progress = Math.min(1, Math.max(0, -rect.top / scrollable));
+      setShowVideo(progress > 0.3);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [scrollRootRef]);
 
   // 영상 표시 시 처음부터 재생, 카드로 복귀 시 정지·리셋
   useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
-    const reduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches
-    if (showVideo && !reduced) {
-      video.currentTime = 0
-      video.play().catch(() => {})
-    } else {
-      video.pause()
-      video.currentTime = 0
+    const video = videoRef.current;
+    if (!video) {
+      return;
     }
-  }, [showVideo])
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (showVideo && !reduced) {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+      video.currentTime = 0;
+    }
+  }, [showVideo]);
 
   return (
     <div className="relative mx-auto w-full max-w-lg">
@@ -140,7 +173,7 @@ function HeroShowcase({ scrollRootRef }) {
         className={cn(
           "aspect-video w-full overflow-hidden rounded-xl transition-opacity duration-500 ease-out",
           TINTED_SHADOW,
-          showVideo ? "opacity-100" : "opacity-0"
+          showVideo ? "opacity-100" : "opacity-0",
         )}
       >
         <video
@@ -160,13 +193,13 @@ function HeroShowcase({ scrollRootRef }) {
           "absolute inset-0 grid place-items-center transition-all duration-500 ease-out",
           showVideo
             ? "pointer-events-none -translate-y-2 scale-95 opacity-0"
-            : "translate-y-0 scale-100 opacity-100"
+            : "translate-y-0 scale-100 opacity-100",
         )}
       >
         <div
           className={cn(
             "w-full max-w-sm rotate-2 rounded-xl transition-transform hover:rotate-0",
-            TINTED_SHADOW
+            TINTED_SHADOW,
           )}
         >
           <PropertyCard
@@ -179,56 +212,56 @@ function HeroShowcase({ scrollRootRef }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // 서비스 소개 랜딩 — 히어로 / 문제 공감 / 핵심 기능(Bento) / 이용 흐름(타임라인) / 하단 CTA
 function LandingPage() {
   // 히어로 쇼케이스 구간(160vh) — 이 영역을 지나는 동안 카드 -> 영상 전환
-  const heroScrollRef = useRef(null)
+  const heroScrollRef = useRef<HTMLElement>(null);
 
   const scrollToFeatures = () =>
-    document.getElementById("features")?.scrollIntoView({ behavior: "smooth" })
+    document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
 
   return (
     <div className="min-h-svh overflow-x-clip bg-background">
       {/* 1. 히어로 — 좌: 카피·CTA / 우: 카드 -> 영상 쇼케이스 (GNB 아래 sticky 고정) */}
       <section ref={heroScrollRef} className="relative h-[160vh]">
         <div className="sticky top-14 mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-2 md:py-24">
-        <div>
-          <p className="text-sm font-semibold text-primary">
-            방을 방송으로 봐, 방방봐
-          </p>
-          <h1 className="mt-3 text-4xl leading-tight font-bold tracking-tight md:text-[3.5rem]">
-            가보지 않고도,
-            <br />
-            제대로 봅니다
-          </h1>
-          <p className="mt-4 max-w-md text-base text-muted-foreground md:text-lg">
-            공인중개사와 실시간 화상으로 매물을 확인하고, 체크리스트와 AI
-            리포트로 기록을 남기세요
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button
-              size="lg"
-              className="h-12 px-7 text-base hover:scale-[1.02] active:scale-[0.98]"
-              asChild
-            >
-              <Link to="/properties">
-                매물 둘러보기
-                <ArrowRight />
-              </Link>
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="h-12 px-7 text-base hover:scale-[1.02] active:scale-[0.98]"
-              onClick={scrollToFeatures}
-            >
-              서비스 알아보기
-            </Button>
+          <div>
+            <p className="text-sm font-semibold text-primary">
+              방을 방송으로 봐, 방방봐
+            </p>
+            <h1 className="mt-3 text-4xl leading-tight font-bold tracking-tight md:text-[3.5rem]">
+              가보지 않고도,
+              <br />
+              제대로 봅니다
+            </h1>
+            <p className="mt-4 max-w-md text-base text-muted-foreground md:text-lg">
+              공인중개사와 실시간 화상으로 매물을 확인하고, 체크리스트와 AI
+              리포트로 기록을 남기세요
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button
+                size="lg"
+                className="h-12 px-7 text-base hover:scale-[1.02] active:scale-[0.98]"
+                asChild
+              >
+                <Link to="/properties">
+                  매물 둘러보기
+                  <ArrowRight />
+                </Link>
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="h-12 px-7 text-base hover:scale-[1.02] active:scale-[0.98]"
+                onClick={scrollToFeatures}
+              >
+                서비스 알아보기
+              </Button>
+            </div>
           </div>
-        </div>
 
           <HeroShowcase scrollRootRef={heroScrollRef} />
         </div>
@@ -262,7 +295,10 @@ function LandingPage() {
       </section>
 
       {/* 3. 핵심 기능 — Bento 그리드 (와이드 라이브 카드 + 우측 스택) */}
-      <section id="features" className="mx-auto max-w-6xl scroll-mt-8 px-4 py-24">
+      <section
+        id="features"
+        className="mx-auto max-w-6xl scroll-mt-8 px-4 py-24"
+      >
         <p className="text-sm font-semibold tracking-wide text-primary">
           핵심 기능
         </p>
@@ -276,10 +312,12 @@ function LandingPage() {
                 <div className="flex size-10 items-center justify-center rounded-lg bg-accent">
                   <Video className="size-5 text-accent-foreground" />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold">실시간 라이브 투어</h3>
+                <h3 className="mt-4 text-lg font-semibold">
+                  실시간 라이브 투어
+                </h3>
                 <p className="mt-1.5 text-sm text-muted-foreground">
-                  중개사가 현장에서 직접 비추는 실시간 영상. 보고 싶은 곳을
-                  바로 요청하세요
+                  중개사가 현장에서 직접 비추는 실시간 영상. 보고 싶은 곳을 바로
+                  요청하세요
                 </p>
               </div>
               <LiveMockup />
@@ -388,7 +426,7 @@ function LandingPage() {
         </p>
       </footer>
     </div>
-  )
+  );
 }
 
-export default LandingPage
+export default LandingPage;

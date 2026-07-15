@@ -1,19 +1,30 @@
-import { useState } from "react"
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom"
-import { LogOut, Menu, Moon, Sun, X } from "lucide-react"
+import { useState } from "react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { LogOut, Menu, Moon, Sun, X } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { useAuth } from "@/context/AuthContext"
-import { useTheme } from "@/context/ThemeContext"
-import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
+import { useTheme } from "@/context/ThemeContext";
+import { cn } from "@/lib/utils";
 
-const NAV_ITEMS = [
+interface NavItemConfig {
+  label: string;
+  to: string | null;
+}
+
+const NAV_ITEMS: NavItemConfig[] = [
   { label: "매물 목록", to: "/properties" },
   { label: "저장 매물", to: null }, // 추후 /saved
   { label: "예약", to: null }, // 추후 /reservations
-]
+];
 
-function NavItem({ item, onNavigate }) {
+function NavItem({
+  item,
+  onNavigate,
+}: {
+  item: NavItemConfig;
+  onNavigate?: () => void;
+}) {
   if (!item.to) {
     // 미구현 경로 — 비활성 톤
     return (
@@ -24,7 +35,7 @@ function NavItem({ item, onNavigate }) {
       >
         {item.label}
       </span>
-    )
+    );
   }
   return (
     <NavLink
@@ -33,19 +44,25 @@ function NavItem({ item, onNavigate }) {
       className={({ isActive }) =>
         cn(
           "text-sm transition-colors hover:text-foreground",
-          isActive ? "font-semibold text-foreground" : "text-muted-foreground"
+          isActive ? "font-semibold text-foreground" : "text-muted-foreground",
         )
       }
     >
       {item.label}
     </NavLink>
-  )
+  );
 }
 
-function AuthArea({ compact = false, onNavigate }) {
-  const { user, logout } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
+function AuthArea({
+  compact = false,
+  onNavigate,
+}: {
+  compact?: boolean;
+  onNavigate?: () => void;
+}) {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   if (!user) {
     return (
@@ -53,13 +70,13 @@ function AuthArea({ compact = false, onNavigate }) {
         variant="outline"
         size="sm"
         onClick={() => {
-          onNavigate?.()
-          navigate("/login", { state: { from: location.pathname } })
+          onNavigate?.();
+          navigate("/login", { state: { from: location.pathname } });
         }}
       >
         로그인
       </Button>
-    )
+    );
   }
 
   return (
@@ -75,20 +92,20 @@ function AuthArea({ compact = false, onNavigate }) {
         variant="ghost"
         size="sm"
         onClick={() => {
-          onNavigate?.()
-          logout()
+          onNavigate?.();
+          logout();
         }}
       >
         <LogOut />
         로그아웃
       </Button>
     </div>
-  )
+  );
 }
 
 // 라이트/다크 전환 토글
 function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme()
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <Button
@@ -99,13 +116,13 @@ function ThemeToggle() {
     >
       {theme === "dark" ? <Sun /> : <Moon />}
     </Button>
-  )
+  );
 }
 
 // 공통 GNB — App 레이아웃 레벨에서 모든 페이지 상단에 표시 (h-14 고정)
 function GlobalNav() {
-  const [menuOpen, setMenuOpen] = useState(false)
-  const closeMenu = () => setMenuOpen(false)
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
@@ -160,7 +177,7 @@ function GlobalNav() {
         )}
       </nav>
     </header>
-  )
+  );
 }
 
-export default GlobalNav
+export default GlobalNav;

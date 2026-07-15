@@ -1,31 +1,38 @@
-import { RotateCcw, Search } from "lucide-react"
+import { RotateCcw, Search } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { BUILDING_TYPES, PRICE_BANDS, REGIONS } from "@/data/properties"
+} from "@/components/ui/select";
+import { BUILDING_TYPES, PRICE_BANDS, REGIONS } from "@/data/properties";
+import type { Filters } from "@/types";
 
-export const DEFAULT_FILTERS = {
+export const DEFAULT_FILTERS: Filters = {
   query: "",
   region: "all",
   price: "all",
   buildingType: "all",
+};
+
+interface PropertyFilterBarProps {
+  filters: Filters;
+  onChange: (filters: Filters) => void;
 }
 
 // 검색 Input + 지역·가격·유형 Select + 초기화. 상태는 부모(page)가 소유.
-function PropertyFilterBar({ filters, onChange }) {
-  const set = (key) => (value) => onChange({ ...filters, [key]: value })
+function PropertyFilterBar({ filters, onChange }: PropertyFilterBarProps) {
+  const set = (key: keyof Filters) => (value: string) =>
+    onChange({ ...filters, [key]: value });
   const isDefault =
     filters.query === "" &&
     filters.region === "all" &&
     filters.price === "all" &&
-    filters.buildingType === "all"
+    filters.buildingType === "all";
 
   return (
     <div className="flex flex-wrap items-center gap-2">
@@ -82,13 +89,17 @@ function PropertyFilterBar({ filters, onChange }) {
       </Select>
 
       {!isDefault && (
-        <Button variant="ghost" size="sm" onClick={() => onChange(DEFAULT_FILTERS)}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onChange(DEFAULT_FILTERS)}
+        >
           <RotateCcw />
           초기화
         </Button>
       )}
     </div>
-  )
+  );
 }
 
-export default PropertyFilterBar
+export default PropertyFilterBar;

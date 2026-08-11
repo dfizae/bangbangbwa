@@ -26,7 +26,7 @@
 ## 🖥 실행 화면
 
 <p align="center">
-  <img src="public/hero-poster.webp" alt="방방봐 랜딩 화면" width="720" />
+  <img src="public/img-webRTC.png" alt="webRTC 화면" width="720" />
 </p>
 
 | 화면 | 설명 |

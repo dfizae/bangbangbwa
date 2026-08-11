@@ -2,65 +2,97 @@
   <img src="public/logo-symbol.png" alt="방방봐 로고" width="140" />
 </p>
 
-<h1 align="center">방방봐 — 방을 방송으로 봐</h1>
+<h1 align="center">방방봐 (bangbangbwa)</h1>
 
 <p align="center">
-  공인중개사와 실시간 화상으로 매물을 확인하고,<br />
+  <b>방을 방송으로 봐</b> — 공인중개사와 실시간 화상으로 매물을 확인하고,<br />
   체크리스트와 AI 리포트로 기록을 남기는 비대면 부동산 투어 서비스
 </p>
 
 ---
 
-## 왜 만들었나
+## 🛠 사용한 기술
+
+| 구분 | 기술 |
+| --- | --- |
+| Frontend | React 19, TypeScript, Vite, Tailwind CSS v4, shadcn/ui, TanStack Query 5, Zustand, react-router-dom |
+| 실시간 투어 | WebRTC (화상 투어), coturn TURN 서버 |
+| Backend | Java 21, Spring Boot (Spring Security · OAuth2 · JPA), PostgreSQL / H2 |
+| AI | AI 매물 분석 서버 (RunPod GPU 환경) |
+| 인증 · 지도 | 카카오 · 구글 소셜 로그인(OAuth2), Kakao Maps API |
+| Infra | AWS EC2 (Ubuntu), Docker · docker compose, Nginx |
+| 협업 | GitLab, Jira, Figma |
+
+## 🖥 실행 화면
+
+<p align="center">
+  <img src="public/hero-poster.webp" alt="방방봐 랜딩 화면" width="720" />
+</p>
+
+| 화면 | 설명 |
+| --- | --- |
+| 랜딩 (`/`) | 히어로 쇼케이스(매물 카드 → 스크롤 시 투어 영상 재생), 기능 소개, 이용 흐름 타임라인 |
+| 매물 목록 (`/properties`) | 검색 · 지역 · 가격 · 유형 필터, 매물 카드 그리드, 저장(찜) 토글 |
+| 매물 상세 (`/properties/:id`) | 매물 정보, 저장 · 라이브 투어 예약, 메모 작성 |
+| 라이브 투어 | 공인중개사와 WebRTC 실시간 화상으로 매물 확인, 체크리스트 기록 |
+| 리포트 | 투어가 끝나면 체크리스트 기반 AI 분석 리포트 제공 |
+
+<!-- 라이브 투어 · 체크리스트 · 리포트 화면의 스크린샷/GIF를 여기에 추가하세요 -->
+
+## 🚀 실행 방법
+
+```bash
+# 저장소 클론
+git clone https://github.com/dfizae/bangbangbwa.git
+cd bangbangbwa
+
+# 의존성 설치
+npm install
+
+# 개발 서버 실행 (http://localhost:5173)
+npm run dev
+
+# 프로덕션 빌드
+npm run build
+```
+
+> 라이브 투어 · AI 리포트 등 전체 기능은 백엔드(Spring Boot) · AI 서버 · TURN 서버가 함께 구동되어야 하며, 이 저장소는 프론트엔드를 담고 있습니다.
+
+## 💡 만든 이유, 목표
 
 - 매물 한 번 보러 **왕복 4시간**
 - **사진과 다른 실물**
 - 뭘 확인해야 할지 모르는 **첫 계약**
 
-이 세 가지 불편에서 시작했습니다. 방방봐는 **예약 → 라이브 투어 → 체크리스트 → 리포트** 네 단계로 집 보는 방식을 바꿉니다.
+이 세 가지 불편에서 시작했습니다. 방방봐는 **예약 → 라이브 투어 → 체크리스트 → 리포트** 네 단계로 집 보는 방식을 바꾸는 것이 목표입니다.
 
-## 주요 화면
+이 프로젝트를 통해 배운 것들:
 
-| 페이지 | 설명 |
-|---|---|
-| 랜딩 (`/`) | 히어로 쇼케이스(매물 카드 → 스크롤 시 투어 영상 재생), Bento 기능 소개, 이용 흐름 타임라인 |
-| 매물 목록 (`/properties`) | 검색·지역·가격·유형 필터, 매물 카드 그리드, 저장(찜) 토글 |
-| 매물 상세 (`/properties/:id`) | 매물 정보, 저장·회의 예약 요청, 메모 작성·수정·삭제 |
-| 로그인 (`/login`) | 카카오·구글 소셜 로그인 (OAuth 연동 전 스텁) |
+- WebRTC 시그널링과 TURN 서버를 이용한 실시간 화상 연결 구조
+- OAuth2 소셜 로그인(카카오 · 구글) 연동 흐름
+- 디자인 토큰 기반의 일관된 UI 시스템 구축 (Tailwind CSS v4 + shadcn/ui)
+- FE · BE · AI · 인프라가 나뉜 팀에서의 협업과 브랜치 전략
 
-## 기술 스택
+## 👤 만든 사람
 
-- **React 19 + Vite** — SPA, react-router-dom
-- **Tailwind CSS v4 + shadcn/ui** — CSS 변수 기반 디자인 토큰
-- **테마** — 라이트(화이트) 기본 + 다크(slate) 토글, 시스템 선호 자동 감지
-- **폰트** — IBM Plex Sans KR (Google Fonts)
+**김재영** — Frontend
 
-## 시작하기
+- GitHub: [@dfizae](https://github.com/dfizae)
+<!-- - Blog: 블로그 주소를 여기에 추가하세요 -->
 
-```bash
-npm install
-npm run dev      # 개발 서버
-npm run build    # 프로덕션 빌드
-```
+## 🙏 감사인사
 
-## 프로젝트 구조
+함께 만든 팀원 5명에게 감사합니다.
 
-```
-src/
-├── pages/          # 랜딩·목록·상세·로그인
-├── components/     # GlobalNav, PropertyCard, PropertyFilterBar + shadcn/ui
-├── context/        # AuthContext(인증 스텁), ThemeContext(다크모드)
-├── data/           # 매물 목데이터 15건
-└── lib/            # 가격·평수 포맷 유틸
-docs/frontend-spec.md   # 기능 명세서
-design.pen              # Pencil 디자인 파일 (라이트/다크 시안, 컴포넌트 보드)
-```
+| 파트 | 팀원 |
+| --- | --- |
+| FE | 김재영([@dfizae](https://github.com/dfizae)), 박xx, 황xx |
+| BE | 서xx, 윤xx, 최xx |
+| AI | 박xx, 최xx |
+| 인프라 | 황xx |
 
-## 디자인 원칙
+도움받은 자료들:
 
-- primary **블루 단일 포인트 컬러** (신뢰 톤), 텍스트·서피스는 slate 계열
-- 섹션마다 다른 레이아웃 패턴 (3등분 균일 카드 지양 — Bento·타임라인·인라인 스트립)
-- 아이콘은 lucide-react, 그림자는 shadow-sm (히어로 틴티드 섀도우만 예외)
-- 상세 규칙은 [CLAUDE.md](CLAUDE.md) 참고
-
-> 디자인 시안은 `design.pen`(Pencil)으로 관리합니다. 라이트/다크(zinc·slate) 3개 테마 버전이 들어 있으며, 최근 코드 변경분(히어로 영상, 로고)은 추후 동기화 예정입니다.
+- [shadcn/ui](https://ui.shadcn.com/) — UI 컴포넌트
+- [WebRTC samples](https://webrtc.github.io/samples/) — WebRTC 연결 · TURN 동작 테스트
+- [Kakao Developers](https://developers.kakao.com/) — 소셜 로그인 · 지도 API

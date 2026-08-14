@@ -47,13 +47,13 @@ git clone https://github.com/dfizae/bangbangbwa.git
 cd bangbangbwa
 
 # 의존성 설치
-npm install
+pnpm install
 
 # 개발 서버 실행 (http://localhost:5173)
-npm run dev
+pnpm dev
 
 # 프로덕션 빌드
-npm run build
+pnpm build
 ```
 
 > 라이브 투어 · AI 리포트 등 전체 기능은 백엔드(Spring Boot) · AI 서버 · TURN 서버가 함께 구동되어야 하며, 이 저장소는 프론트엔드를 담고 있습니다.
